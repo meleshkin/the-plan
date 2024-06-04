@@ -1,4 +1,4 @@
-package arrays101;
+package whatever;
 
 public class SubstringSearch {
     public static void main(String[] args) {
