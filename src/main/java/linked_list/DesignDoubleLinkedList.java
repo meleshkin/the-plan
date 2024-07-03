@@ -1,60 +1,48 @@
 package linked_list;
 
-public class MyLinkedList {
-
+public class DesignDoubleLinkedList {
     public static void main(String[] args) {
-        MyLinkedList list = new MyLinkedList();
+        DoubleLinkedList list = new DoubleLinkedList();
+        /*
+        list.addAtHead(1);
+        list.addAtHead(2);
+        list.addAtHead(3);
+        list.addAtHead(4);
+        */
+
+        /*
+        list.addAtTail(1);
+        list.addAtTail(2);
+        list.addAtTail(3);
+        list.addAtTail(4);
+        */
+
         list.addAtIndex(0, 1);
         list.addAtIndex(1, 2);
         list.addAtIndex(2, 3);
         list.addAtIndex(3, 4);
+
+        list.deleteAtIndex(3);
+
+        System.out.println(list.get(4));
     }
+}
 
-    static class Node {
-        int val;
-        Node next;
+class Node {
+    int val;
+    Node next;
+    Node prev;
 
-        public Node() { }
-
-        public Node(int val) {
-            this.val = val;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(val);
-        }
+    public Node(int val) {
+        this.val = val;
     }
+}
+
+class DoubleLinkedList {
+
     Node head;
-
-    public MyLinkedList() {
+    public DoubleLinkedList() {
         head = null;
-    }
-
-    public void cycle(int indexTo) {
-        Node last;
-        Node target = null;
-
-        int n = 0;
-        Node curr = head;
-        while (curr != null) {
-            if (n == indexTo) {
-                target = curr;
-                break;
-            } else {
-                curr = curr.next;
-            }
-            n++;
-        }
-
-        curr = head;
-        while (curr.next != null) {
-            curr = curr.next;
-        }
-        last = curr;
-
-        last.next = target;
-
     }
 
     public int get(int index) {
@@ -67,51 +55,37 @@ public class MyLinkedList {
             if (n == index) {
                 return curr.val;
             } else {
+                n++;
                 curr = curr.next;
             }
-            n++;
         }
         return -1;
     }
 
-    public Node getNode(int index) {
-        if (index < 0) {
-            return null;
-        }
-        int n = 0;
-        Node curr = head;
-        while (curr != null) {
-            if (n == index) {
-                return curr;
-            } else {
-                curr = curr.next;
-            }
-            n++;
-        }
-        return null;
-    }
-
     public void addAtHead(int val) {
         if (head == null) {
-            head = new Node(val);
+            Node node = new Node(val);
+            head = node;
         } else {
-            Node newNode = new Node(val);
-            newNode.next = head;
-            head = newNode;
+            Node node = new Node(val);
+            node.next = head;
+            head.prev = node;
+            head = node;
         }
     }
 
     public void addAtTail(int val) {
+        Node curr = head;
         if (head == null) {
-            head = new Node(val);
+            addAtHead(val);
         } else {
-            Node curr = head;
             while (curr.next != null) {
                 curr = curr.next;
             }
-            curr.next = new Node(val);
+            Node node = new Node(val);
+            node.prev = curr;
+            curr.next = node;
         }
-
     }
 
     public void addAtIndex(int index, int val) {
@@ -128,6 +102,7 @@ public class MyLinkedList {
                 Node newNode = new Node(val);
                 newNode.next = curr.next;
                 curr.next = newNode;
+                newNode.prev = curr;
             } else {
                 curr = curr.next;
             }
@@ -148,19 +123,14 @@ public class MyLinkedList {
             if (n == index - 1) {
                 if (curr.next != null) {
                     curr.next = curr.next.next;
+                    if (curr.next != null) {
+                        curr.next.prev = curr;
+                    }
                 }
             } else {
                 curr = curr.next;
             }
             n++;
         }
-    }
-
-    public Node getLast() {
-        Node curr = head;
-        while(curr.next != null) {
-            curr = curr.next;
-        }
-        return curr;
     }
 }
